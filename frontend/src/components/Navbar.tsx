@@ -51,7 +51,7 @@ const Navbar = () => {
       <Button
         onClick={() => {
           localStorage.removeItem("authToken");
-          navigate("/login");
+          navigate("/");
         }}
       >
         <LogOut />
