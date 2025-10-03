@@ -62,7 +62,7 @@ const AllFeedbacks = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background px-20">
       {/* Navbar */}
-      <nav className="w-full py-5 flex items-center justify-between bg-card/50 backdrop-blur-sm border-b border-border">
+      <nav className="w-full py-5 flex items-center justify-between  backdrop-blur-sm border-b border-border">
         <Link
           to={token ? "/dashboard" : "/"}
           className="text-xl font-medium text-foreground flex items-center"

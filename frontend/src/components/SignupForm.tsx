@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { signup } from "@/utils/api";
+import { login, signup } from "@/utils/api";
 import { Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -39,8 +39,17 @@ export function SignupForm({
         password,
       });
       console.log(res.data);
+
       if (res.data === "User created successfully") {
-        navigate("/dashboard");
+        const res = await login({
+          email,
+          password,
+        });
+        localStorage.setItem("authToken", res.data.token);
+
+        if (res.data.token) {
+          navigate("/dashboard");
+        }
       }
     } catch (error: any) {
       console.log(error.message);

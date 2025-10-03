@@ -15,7 +15,7 @@ import {
   getUsers,
 } from "@/utils/api";
 import { jwtDecode } from "jwt-decode";
-import { Inbox, MessageCircle } from "lucide-react";
+import { Inbox, MessageCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface IUser {
@@ -29,6 +29,8 @@ interface IFeedback {
   userId: number;
   message: string;
   createdAt: string;
+  upvoteCount: number;
+  downvoteCount: number;
 }
 
 const Dashboard = () => {
@@ -38,13 +40,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!token) return;
-    const decoded: any = jwtDecode(token);
+    const decoded: { sub: string } = jwtDecode(token);
     const email = decoded.sub; // or decoded.email, depending on your JWT payload
 
     const fetchUser = async () => {
       const usersRes = await getUsers(token);
 
-      const user = usersRes.data.find((u: any) => u.email === email);
+      const user = usersRes.data.find((u: IUser) => u.email === email);
       if (user) {
         console.log("User ID:", user.id);
         const res = await getUser(user.id, token);
@@ -89,13 +91,27 @@ const Dashboard = () => {
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
                   <MessageCircle size={18} className="text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <CardTitle className="text-base font-semibold">
                     Feedback #{feedback.id}
                   </CardTitle>
                   <CardDescription className="text-xs text-muted-foreground">
                     {new Date(feedback.createdAt).toLocaleString()}
                   </CardDescription>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-full border border-green-200">
+                    <ThumbsUp size={14} className="text-green-600" />
+                    <span className="font-medium text-green-700">
+                      {feedback.upvoteCount}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 bg-red-50 px-2 py-1 rounded-full border border-red-200">
+                    <ThumbsDown size={14} className="text-red-600" />
+                    <span className="font-medium text-red-700">
+                      {feedback.downvoteCount}
+                    </span>
+                  </div>
                 </div>
               </CardHeader>
 
