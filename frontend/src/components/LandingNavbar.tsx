@@ -1,4 +1,4 @@
-import { LogInIcon, MessageSquare, MoveRight } from "lucide-react";
+import { Eye, MessageSquare, MoveRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 
@@ -23,10 +23,10 @@ const LandingNavbar = () => {
           </Button>
         </Link>
       ) : (
-        <Link to={"/login"}>
+        <Link to={"/all-feedbacks"}>
           <Button>
-            Login
-            <LogInIcon />
+            View Feedbacks
+            <Eye />
           </Button>
         </Link>
       )}

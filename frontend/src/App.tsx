@@ -8,6 +8,7 @@ import Protected from "./components/Protected";
 import AllFeedbacks from "./pages/AllFeedbacks";
 import DashboardLayout from "./pages/DashboardLayout";
 import Home from "./pages/Home";
+import TestPublic from "./pages/TestPublic";
 
 const App = () => {
   return (
@@ -16,10 +17,11 @@ const App = () => {
         <Route element={<Protected />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/all-feedbacks" element={<AllFeedbacks />} />
           </Route>
         </Route>
         <Route path="/" element={<Home />} />
+        <Route path="/all-feedbacks" element={<AllFeedbacks />} />
+        <Route path="/test-public" element={<TestPublic />} />
         <Route path="/testing" element={<Testing />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

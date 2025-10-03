@@ -25,11 +25,13 @@ const FeedbackForm = ({ children }: { children: React.ReactNode }) => {
 
   const { register, handleSubmit, reset } = useForm<IFeedback>();
   const [success, setSuccess] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const submitFeedbackHandler = async ({ feedback }: IFeedback) => {
     try {
       setSuccess("");
+      setError("");
       setLoading(true);
       const res = await submitFeedback({ message: feedback }, token!);
       reset();
@@ -39,8 +41,34 @@ const FeedbackForm = ({ children }: { children: React.ReactNode }) => {
           window.location.reload();
         }, 1000);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err: unknown) {
+      console.error(err);
+      
+      // Handle content moderation errors
+      interface ErrorResponse {
+        response?: {
+          status: number;
+          data: {
+            error?: string;
+            message?: string;
+            detectedWord?: string;
+          };
+        };
+      }
+      
+      const error = err as ErrorResponse;
+      if (error.response?.status === 400) {
+        const errorData = error.response.data;
+        if (errorData.error === "Content Moderation Violation") {
+          setError(`Content blocked: Your message contains inappropriate language ("${errorData.detectedWord}"). Please revise your feedback and try again.`);
+        } else {
+          setError(errorData.message || "Invalid request. Please check your input.");
+        }
+      } else if (error.response?.status === 401) {
+        setError("You must be logged in to submit feedback.");
+      } else {
+        setError("Failed to submit feedback. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -72,6 +100,9 @@ const FeedbackForm = ({ children }: { children: React.ReactNode }) => {
           />
           {success && (
             <p className="text-sm text-center text-green-600">{success}</p>
+          )}
+          {error && (
+            <p className="text-sm text-center text-red-600 bg-red-50 p-2 rounded border border-red-200">{error}</p>
           )}
           <DialogFooter>
             <Button type="submit" disabled={loading} aria-disabled={loading}>

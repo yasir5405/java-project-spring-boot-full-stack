@@ -38,9 +38,9 @@ export const getFeedback = (id: number, token: string) =>
     headers: { Authorization: `Bearer ${token}` },
   });
 
-export const getAllFeedback = (token: string) =>
+export const getAllFeedback = (token?: string) =>
   axios.get(`${API_URL}/feedback`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
 export const updateFeedback = (id: number, feedback: any, token: string) =>
@@ -58,5 +58,26 @@ export const deleteFeedback = (id: number, token: string) =>
 
 export const getFeedbackByUserId = (userId: number, token: string) =>
   axios.get(`${API_URL}/feedback/user/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+// Voting API functions
+export const upvoteFeedback = (feedbackId: number, token: string) =>
+  axios.post(`${API_URL}/votes/upvote/${feedbackId}`, {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const downvoteFeedback = (feedbackId: number, token: string) =>
+  axios.post(`${API_URL}/votes/downvote/${feedbackId}`, {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const removeVote = (feedbackId: number, token: string) =>
+  axios.delete(`${API_URL}/votes/${feedbackId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+export const getUserVote = (feedbackId: number, token: string) =>
+  axios.get(`${API_URL}/votes/${feedbackId}/user-vote`, {
     headers: { Authorization: `Bearer ${token}` },
   });

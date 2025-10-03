@@ -24,6 +24,8 @@ public class FeedbackDaoImpl implements FeedbackDao {
             feedback.setUserId(rs.getInt("user_id"));
             feedback.setMessage(rs.getString("message"));
             feedback.setCreatedAt(rs.getTimestamp("created_at"));
+            feedback.setUpvoteCount(rs.getInt("upvote_count"));
+            feedback.setDownvoteCount(rs.getInt("downvote_count"));
             return feedback;
         }
     };
@@ -43,7 +45,7 @@ public class FeedbackDaoImpl implements FeedbackDao {
 
     @Override
     public List<Feedback> getAllFeedback() {
-        String sql = "SELECT * FROM feedback";
+        String sql = "SELECT * FROM feedback ORDER BY (upvote_count - downvote_count) DESC, created_at DESC";
         return jdbcTemplate.query(sql, feedbackRowMapper);
     }
 
