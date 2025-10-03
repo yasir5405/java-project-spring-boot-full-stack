@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { upvoteFeedback, downvoteFeedback, getUserVote } from "@/utils/api";
+import { toast } from "sonner";
 
 interface VoteButtonsProps {
   feedbackId: number;
@@ -48,7 +49,18 @@ const VoteButtons = ({
   }, [token, fetchUserVote]);
 
   const handleUpvote = async () => {
-    if (!token || loading) return;
+    if (!token) {
+      toast.error("Please log in to vote", {
+        description: "You need to be logged in to upvote feedbacks",
+        action: {
+          label: "Login",
+          onClick: () => window.location.href = "/login"
+        }
+      });
+      return;
+    }
+    
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -79,7 +91,18 @@ const VoteButtons = ({
   };
 
   const handleDownvote = async () => {
-    if (!token || loading) return;
+    if (!token) {
+      toast.error("Please log in to vote", {
+        description: "You need to be logged in to downvote feedbacks",
+        action: {
+          label: "Login",
+          onClick: () => window.location.href = "/login"
+        }
+      });
+      return;
+    }
+    
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -108,25 +131,6 @@ const VoteButtons = ({
       setLoading(false);
     }
   };
-
-  if (!token) {
-    // Show read-only vote display for unauthenticated users
-    return (
-      <div className="flex flex-col items-center gap-1 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <ChevronUp className="h-4 w-4" />
-          <span>{upvotes}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <ChevronDown className="h-4 w-4" />
-          <span>{downvotes}</span>
-        </div>
-        <div className="text-xs font-medium">
-          {netVotes > 0 ? `+${netVotes}` : netVotes}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center gap-1">

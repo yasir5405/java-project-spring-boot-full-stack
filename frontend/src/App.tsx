@@ -9,6 +9,7 @@ import AllFeedbacks from "./pages/AllFeedbacks";
 import DashboardLayout from "./pages/DashboardLayout";
 import Home from "./pages/Home";
 import TestPublic from "./pages/TestPublic";
+import { Toaster } from "@/components/ui/sonner";
 
 const App = () => {
   return (
@@ -27,6 +28,17 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Toaster
+        position="top-right" // top-left, top-center, bottom-left, bottom-right, bottom-center
+        richColors // enables rich color scheme for variants (success, error, warning)
+        closeButton // show close button on every toast
+        expand // expands toast to full width on mobile
+        duration={4000} // auto close duration (ms), default is 4000
+        visibleToasts={3} // number of toasts visible at once
+        theme="system" // "light" | "dark" | "system"
+        offset={24} // margin from screen edges in px
+        gap={12} // space between stacked toasts in px
+      />
     </div>
   );
 };
